@@ -1,0 +1,4 @@
+BIN_DIR=`dirname $BASH_SOURCE`/../bin
+BIN_DIR_NORMALIZED="`cd "${BIN_DIR}";pwd`"
+
+export PATH=$PATH:$BIN_DIR_NORMALIZED

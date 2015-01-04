@@ -1,0 +1,16 @@
+# Load bash completion scripts (local env)
+if [ -d ~/.bash_completion.d ]; then
+  for f in $(ls ~/.bash_completion.d); do
+    source ~/.bash_completion.d/$f
+  done
+fi
+
+# Load bash completion scripts (version controlled env)
+COMPLETION_DIR=`dirname $BASH_SOURCE`/../bash_completion.d
+COMPLETION_DIR_NORMALIZED="`cd "${COMPLETION_DIR}";pwd`"
+
+if [ -d "$COMPLETION_DIR_NORMALIZED" ]; then
+  for f in $(ls $COMPLETION_DIR_NORMALIZED); do
+    source $COMPLETION_DIR_NORMALIZED/$f
+  done
+fi

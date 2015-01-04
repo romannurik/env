@@ -1,6 +1,0 @@
-# Load bash completion scripts
-if [ -d ~/.bash_completion.d ]; then
-  for f in $(ls ~/.bash_completion.d); do
-    source ~/.bash_completion.d/$f
-  done
-fi
