@@ -1,0 +1,11 @@
+#!/bin/sh
+# Bash completion for cdg
+function _cdg() {
+  mkdir -p ~/.cdg
+  local word=${COMP_WORDS[COMP_CWORD]}
+  local names=$(ls ~/.cdg/)
+  COMPREPLY=($(compgen -W "${names}" -- "${word}"))
+  if [ -z ${COMPREPLY} ]; then COMPREPLY=""; fi
+}
+
+complete -o nospace -o default -F _cdg cdg

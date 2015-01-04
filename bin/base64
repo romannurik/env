@@ -1,0 +1,4 @@
+#!/usr/bin/env python
+import base64
+import sys
+print base64.standard_b64encode(sys.stdin.read())

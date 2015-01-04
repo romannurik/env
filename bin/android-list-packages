@@ -1,0 +1,2 @@
+#!/bin/sh
+adb shell pm list packages | sed 's@^package\:@@g' | sort

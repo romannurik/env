@@ -1,0 +1,5 @@
+#!/bin/sh
+echo Restarting ADB... >&2
+adb kill-server >/dev/null 2>&1
+adb start-server >/dev/null 2>&1
+adb devices

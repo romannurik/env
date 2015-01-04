@@ -1,0 +1,8 @@
+#!/bin/sh
+if [ -z "$1" ]; then
+  echo Usage: $0 \<binary-xml-path\> >&2
+  exit
+fi
+
+SELFDIR=$(dirname $0)
+java -jar $SELFDIR/AXMLPrinter2.jar $1 | xmllint --format --noblanks - | perl -pe "s@\t@  @g"

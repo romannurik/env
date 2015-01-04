@@ -1,0 +1,5 @@
+#!/bin/sh
+#ARG="$*"
+#echo "import time\nfrom com.android.monkeyrunner import MonkeyRunner, MonkeyDevice\ndevice = MonkeyRunner.waitForConnection()\ndevice.press('ENTER', device.DOWN)\ntime.sleep(0.2)\ndevice.press('ENTER', device.UP)" | monkeyrunner
+#http://stackoverflow.com/questions/7789826/adb-shell-input-events
+adb shell input keyevent 66

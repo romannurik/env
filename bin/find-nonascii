@@ -1,0 +1,10 @@
+#!/bin/sh
+if [ -z "$2" ]; then
+  echo "Usage: $0 <dir> <file-extension>" >&2
+  exit
+fi
+
+DIR="$1"
+EXT="$2"
+
+find "${DIR}" -iname "*.${EXT}" -exec grep -P "[\x80-\xFF]" {} \;

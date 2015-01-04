@@ -1,0 +1,8 @@
+#!/bin/sh
+if [ -z "$1" ]; then
+  echo Usage: $0 \<apk-path\> >&2
+  exit
+fi
+
+aapt dump xmltree "$1" AndroidManifest.xml | grep "package=" |\
+    sed 's@.*package="\([^"]*\)".*@\1@g'

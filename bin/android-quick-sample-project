@@ -1,0 +1,136 @@
+#!/usr/bin/env python
+
+# Copyright 2010 Google Inc.
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# 
+#      http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import mimetypes
+import os
+import os.path
+import re
+import shutil
+import string
+import sys
+
+
+SKIP_FILES = [
+    '.DS_Store'
+]
+NO_SUBSTITUTE_FILES = [
+    'gradlew'
+]
+TEMPLATE_DIRECTORY = os.path.realpath(__file__ + '-template')
+SUBSTITUTE_MIMES = [
+    'application/xml',
+    'text/x-java-source',
+    'text/x-java',
+    'text/plain',
+]
+
+
+def find_android_sdk_path():
+  dx_path = which('dx')
+  if not dx_path:
+    print >> sys.stderr, '!!! WARNING: Android SDK not found.'
+    return ''
+
+  sdk_path = os.path.dirname(os.path.dirname(dx_path)) # remove platform-tools/dx
+  return sdk_path if sdk_path else ''
+
+
+def main():
+  if len(sys.argv) < 2:
+    print >> sys.stderr, 'Please provide a project name in CamelCase.'
+    raise SystemExit
+
+  project_name = sys.argv[1]
+  sub_map = dict(
+      ProjectNameWithSpaces=camel_case_with_spaces(project_name),
+      AndroidSdkPath=find_android_sdk_path(),
+      ProjectName=project_name,
+      projectname=project_name.lower())
+
+  for dirpath, dirnames, filenames in os.walk(TEMPLATE_DIRECTORY):
+    base_path = dirpath[len(TEMPLATE_DIRECTORY)+1:]
+
+    # make directories, substituting project name
+    for d in dirnames:
+      d = substitute_vars(d, sub_map)
+      try:
+        #print os.path.join('.', base_path, d)
+        os.makedirs(os.path.join(project_name, base_path, d))
+      except OSError: pass
+
+    # copy files, substituting project name
+    for f in filenames:
+      if f in SKIP_FILES:
+        continue
+
+      src_path = os.path.join(dirpath, f)
+
+      mime = mimetypes.guess_type(src_path)[0]
+      dst_path = os.path.join(
+          project_name,
+          substitute_vars(base_path, sub_map),
+          substitute_vars(f, sub_map))
+
+      if not f in NO_SUBSTITUTE_FILES and mime is None or mime in SUBSTITUTE_MIMES:
+        print 'Template: %s (%s)' % (dst_path, mime if mime else 'unknown')
+        t = string.Template(open(src_path, 'r').read())
+        dst_file = open(dst_path, 'w')
+        try:
+          dst_file.write(t.substitute(sub_map))
+        except:
+          print >> sys.stderr, 'Error with template file %s: %s' % (dst_path, sys.exc_info()[1])
+          raise SystemExit
+        dst_file.close()
+        shutil.copystat(src_path, dst_path)
+      else:
+        print '    Copy: %s (%s)' % (dst_path, mime if mime else 'unknown')
+        shutil.copy2(src_path, dst_path)
+
+
+def camel_case_with_spaces(s):
+  s = s[:1].upper() + s[1:]
+  out = ''
+  items = re.findall(r'(?:[a-z0-9]+|[A-Z]*)[A-Z]', s[::-1])
+  return ' '.join(items)[::-1]
+
+
+def substitute_vars(string, sub_map):
+  for name, val in sub_map.items():
+    string = string.replace('___' + name + '___', val)
+  return string
+
+
+#http://stackoverflow.com/questions/377017/test-if-executable-exists-in-python/377028#377028
+def which(program):
+  def is_exe(fpath):
+    return os.path.isfile(fpath) and os.access(fpath, os.X_OK)
+
+  fpath, fname = os.path.split(program)
+  if fpath:
+    if is_exe(program):
+      return program
+  else:
+    for path in os.environ["PATH"].split(os.pathsep):
+      path = path.strip('"')
+      exe_file = os.path.join(path, program)
+      if is_exe(exe_file):
+        return exe_file
+
+  return None
+
+
+if __name__ == '__main__':
+  main()

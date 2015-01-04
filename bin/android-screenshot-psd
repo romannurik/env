@@ -1,0 +1,4 @@
+#!/bin/bash
+F=`mktemp /tmp/psd.XXXX`.png
+android-screenshot $F
+open -a /Applications/Adobe\ Photoshop\ CC\ 2014/Adobe\ Photoshop\ CC\ 2014.app $F

@@ -1,0 +1,8 @@
+#!/bin/sh
+DIR=.
+if [ -n "$1" ]; then
+  DIR="$1"
+fi
+
+find $DIR -iname .DS_Store -exec rm {} \;
+find $DIR -iname ._\* -exec rm {} \;

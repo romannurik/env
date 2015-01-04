@@ -1,0 +1,2 @@
+#!/bin/sh
+adb shell am start -a android.intent.action.VIEW -t video/mp4 -d \"$1\"

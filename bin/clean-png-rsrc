@@ -1,0 +1,7 @@
+#!/bin/sh
+DIR=.
+if [ -n "$1" ]; then
+  DIR="$1"
+fi
+
+find $DIR -iname \*.png -exec rm -f {}/rsrc \;

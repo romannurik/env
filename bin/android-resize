@@ -1,0 +1,41 @@
+#!/bin/sh
+if [[ ("$1" != "4" && "$1" != "5" && "$1" != "7" && "$1" != "reset") ]]; then
+  echo "Usage: `basename $0` <size (4|5|7|reset)> <optional orientation (land|port)>" >&2
+  exit
+fi
+
+adb root
+
+PREFIX="adb shell wm size"
+#PREFIX="adb shell am display-size"
+
+case "$1" in
+  4)
+    W=1280
+    H=768
+    ;;
+  5)
+    W=1280
+    H=720
+    ;;
+  7)
+    W=1920
+    H=1200
+    ;;
+  reset)
+    COMMAND="$PREFIX reset"
+esac
+
+if [ -z "$COMMAND" ]; then
+  case "$2" in
+    port)
+      COMMAND="$PREFIX ${H}x${W}"
+      ;;
+    *)
+      COMMAND="$PREFIX ${W}x${H}"
+      ;;
+  esac
+fi
+
+echo $COMMAND
+$COMMAND

@@ -1,0 +1,2 @@
+#!/bin/sh
+adb shell am broadcast -a android.server.checkin.CHECKIN

@@ -1,0 +1,64 @@
+# cdg command
+# A smarter cd, works well with up: http://daniele.livejournal.com/76011.html
+
+# Help: cdg -h
+# Show all links: cdg
+# Delete link: cdg -d foo
+# Clear all: cdg -c
+# Store link to working directory: cdg -w foo
+# Go to link: cdg foo
+function cdg() {
+  ROOT=~/.cdg/
+  ACTION="$1"
+  NAME="${2%/}"  # Strip trailing slash
+
+  mkdir -p ${ROOT}
+
+  if [ -z ${ACTION} ]; then
+    ls -oAl ${ROOT}
+
+  elif [ "-h" == ${ACTION} ]; then
+    echo 'Usage: cdg [-h | <name> | -w <name> | -d name | -c]' >&2
+    return
+
+  elif [ "-c" == ${ACTION} ]; then
+    for NAME in $(ls ${ROOT}); do
+      unlink ${ROOT}${NAME}
+    done
+    echo "All names cleared."
+
+  elif [ "-w" == ${ACTION} ]; then
+    if [ -z ${NAME} ]; then
+      echo 'Usage: cdg -w <name>' >&2
+      return
+    fi
+    if [ -d ${ROOT}${NAME} ]; then
+      echo "Replacing old name:"
+      ls -oAl ${ROOT}${NAME}
+      unlink ${ROOT}${NAME}
+    fi
+    ln -s "$(pwd)" ${ROOT}${NAME}
+    echo "Stored name \"${NAME}\"."
+
+  elif [ "-d" == ${ACTION} ]; then
+    if [ -z ${NAME} ]; then
+      echo 'Usage: cdg -d <name>' >&2
+      return
+    fi
+    if [ ! -d ${ROOT}${NAME} ]; then
+      echo "Name \"${NAME}\" doesn't exist." >&2
+      return
+    fi
+    unlink ${ROOT}${NAME}
+    echo "Name \"${NAME}\" deleted."
+
+  else
+    NAME=${ACTION%/}
+    if [ ! -d ${ROOT}${NAME} ]; then
+      echo "Name \"${NAME}\" doesn't exist." >&2
+      return
+    fi
+    cd -P ${ROOT}${NAME}
+
+  fi
+}

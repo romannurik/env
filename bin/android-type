@@ -1,0 +1,3 @@
+#!/bin/sh
+ARG="$*"
+echo "from com.android.monkeyrunner import MonkeyRunner, MonkeyDevice\ndevice = MonkeyRunner.waitForConnection()\ndevice.type('$ARG')" | monkeyrunner
