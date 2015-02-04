@@ -22,7 +22,7 @@ for APK in "${APKS[@]}"; do
   case $COMMAND in
     i)
       echo "Installing $APK..."
-      ninja-adb.sh install -r "$APK"
+      ninja-adb install -r "$APK"
       ;;
 
     u)
@@ -33,7 +33,7 @@ for APK in "${APKS[@]}"; do
       else
         echo "Uninstalling $APK..."
       fi
-      ninja-adb.sh uninstall "$PACKAGE"
+      ninja-adb uninstall "$PACKAGE"
       ;;
   esac
 
