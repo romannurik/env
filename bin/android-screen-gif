@@ -1,0 +1,21 @@
+#!/bin/bash
+NAME=screencap
+if [[ "$1" != "" ]]; then
+  NAME="$1"
+fi
+adb shell screenrecord --bit-rate=20M "/sdcard/$NAME.mp4" &
+PID=$!
+echo $PID
+read -n1 -r -p "Press any key to stop" key
+kill -SIGHUP $PID
+sleep 0.2
+adb pull "/sdcard/$NAME.mp4" && gifify -np 360:640 -r 16 -o "$NAME" "$NAME.mp4"
+adb shell rm "/sdcard/$NAME.mp4"
+
+# adb shell sleep 4 &
+# PID=$!
+# echo $PID
+# sleep 0.1
+# kill -SIGHUP $PID
+# sleep 0.1
+# ps aux | grep shell

@@ -34,7 +34,12 @@ rm -rf ${TEMP_DIR_NAME}/gen
 #rm -rf ${TEMP_DIR_NAME}/libs
 rm -rf ${TEMP_DIR_NAME}/bin
 rm -rf ${TEMP_DIR_NAME}/build
+rm -rf ${TEMP_DIR_NAME}/**/build
 rm -rf ${TEMP_DIR_NAME}/build.xml
+rm -rf ${TEMP_DIR_NAME}/*.bat
+rm -rf ${TEMP_DIR_NAME}/gradlew
+rm -rf ${TEMP_DIR_NAME}/gradle
+rm -rf ${TEMP_DIR_NAME}/**/*.bat
 rm -rf ${TEMP_DIR_NAME}/local.properties
 rm -rf ${TEMP_DIR_NAME}/default.properties
 rm -rf ${TEMP_DIR_NAME}/ant.properties
@@ -43,6 +48,7 @@ rm -rf ${TEMP_DIR_NAME}/build.properties
 rm -rf ${TEMP_DIR_NAME}/proguard.cfg
 rm -rf ${TEMP_DIR_NAME}/proguard-project.txt
 rm -rf ${TEMP_DIR_NAME}/*.ipr
+rm -rf ${TEMP_DIR_NAME}/**/*.iml
 rm -rf ${TEMP_DIR_NAME}/*.iml
 rm -rf ${TEMP_DIR_NAME}/*.iws
 rm -rf ${TEMP_DIR_NAME}/*.sh

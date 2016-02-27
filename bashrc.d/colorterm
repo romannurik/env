@@ -1,8 +1,42 @@
-case "$TERM" in
-xterm-color|xterm-256color)
-    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;30m\]\u\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
-    ;;
-*)
-    PS1='${debian_chroot:+($debian_chroot)}\u:\w\$ '
-    ;;
-esac
+# Color prompt for git
+function ___run_source___() {
+  local f_reset=$(tput sgr0)
+  local f_bold=$(tput bold)
+  local f_dim=$(tput dim)
+
+  local f_black=$(tput setaf 0)
+  local f_red=$(tput setaf 1)
+  local f_green=$(tput setaf 2)
+  local f_yellow=$(tput setaf 3)
+  local f_blue=$(tput setaf 4)
+  local f_magenta=$(tput setaf 5)
+  local f_cyan=$(tput setaf 6)
+  local f_white=$(tput setaf 7)
+
+  local gitbranch='$(
+      git branch 2>/dev/null |
+      sed -ne "s/^* \(.*\)/\{\1\}/p"
+      )'
+
+  case "$TERM" in
+  xterm-color|xterm-256color)
+      PS1=""\
+"${debian_chroot:+($debian_chroot)}"\
+"\[$f_bold\]\[$f_black\]"\
+"\u"\
+"\[$f_reset\]"\
+":"\
+"\[$f_bold\]\[$f_blue\]"\
+"\w"\
+"\[$f_reset\]\[$f_magenta\]"\
+"$gitbranch"\
+"\[$f_reset\]\$ "
+      ;;
+  *)
+      PS1='${debian_chroot:+($debian_chroot)}\u:\w\$ '
+      ;;
+  esac
+}
+
+___run_source___
+unset ___run_source___
