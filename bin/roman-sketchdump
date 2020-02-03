@@ -1,0 +1,13 @@
+#!/usr/bin/env python
+import ujson  # faster version of json
+import sys
+import subprocess
+
+# dumps with sorted keys, making it easier to diff
+raw_dump = subprocess.check_output(['sketchtool', 'dump'] + sys.argv[1:])
+reformatted = ujson.dumps(ujson.loads(raw_dump),
+    sort_keys=True,
+    # separators=(',', ': '),
+    indent=2)
+
+print reformatted
