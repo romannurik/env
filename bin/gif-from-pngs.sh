@@ -1,4 +1,9 @@
 #!/bin/sh
-ffmpeg -i "$1" -vf palettegen __palette.png
-ffmpeg -i "$1" -i __palette.png -lavfi paletteuse "$1.gif"
-rm __palette.png
+# Run this in a directory full of pngs
+# Pass in the fps (default is 60)
+FPS=60
+if [ "$1" ]; then
+  FPS=$1
+fi
+
+ffmpeg -y -r $FPS -pattern_type glob -i "*.png" "_.gif"
